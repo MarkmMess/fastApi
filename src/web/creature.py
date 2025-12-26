@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 from model.creature import Creature
-import data.creature as service
+import service.creature as service
 
 router = APIRouter(prefix = "/creature")
 
@@ -19,11 +19,11 @@ def create(creature: Creature) -> Creature:
     return service.create(creature)
 
 @router.patch("/")
-def modify(creature: Creature) -> Creature:
-    return service.modify(creature)
+def modify(name: str, creature: Creature) -> Creature:
+    return service.modify(name, creature)
 
 @router.put('/')
-def replace(creature: Creature) -> Creature:
+def replace(creature: Creature) -> str:
     return service.replace(creature)
 
 @router.delete('/{name}')
