@@ -77,8 +77,8 @@ def get_one(name) -> User:
 def create(user: User) -> User:
     return data.create(user)
 
-def modify(user: User) -> User:
-    return data.modify(user)
+def modify(name: str, user: User) -> User:
+    return data.modify(name, user)
 
 def delete(name: str) -> None:
     return data.delete(name)

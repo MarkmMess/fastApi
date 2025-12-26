@@ -5,11 +5,11 @@ from errors import Missing, Duplicate
 
 curs.execute("""create table if not exists users (
                 name text primary key,
-                hash text)""")
+                hash text primary key)""")
 
 curs.execute("""create table if not exists xusers (
                 name text primary key,
-                hash text)""")
+                hash text primary key)""")
 
 def row_to_model(row: tuple) -> User:
     name, hash = row
@@ -34,13 +34,14 @@ def get_all() -> list[User]:
     rows = curs.fetchall()
     return [row_to_model(user) for user in rows]
 
-def create(user: User, table:str = "user"):
+def create(user: User, table:str = "users"):
     qry = f"insert into {table} (name, hash) values (:name, :hash)"
     params = model_to_dict(user)
     try:
         curs.execute(qry, params)
     except IntegrityError:
         raise Duplicate(msg=f"User {user.name} already exists")
+    return get_one(user.name)
 
 
 def modify(name: str, user: User) -> User:
@@ -54,7 +55,7 @@ def modify(name: str, user: User) -> User:
     if curs.rowcount == 1:
         return get_one(user.name)
     else:
-        raise Missing(msg=f"Creature {name} not found")
+        raise Missing(msg=f"User {name} not found")
 
 def delete(name: str) -> None:
     user = get_one(name)
