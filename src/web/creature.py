@@ -1,4 +1,5 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
+from errors import Duplicate
 from model.creature import Creature
 import service.creature as service
 
@@ -20,7 +21,11 @@ def create(creature: Creature) -> Creature:
 
 @router.patch("/")
 def modify(name: str, creature: Creature) -> Creature:
-    return service.modify(name, creature)
+    try:
+        return service.modify(name, creature)
+    except Duplicate as exc:
+        raise HTTPException(status_code=404, detail=exc.msg)
+
 
 @router.put('/')
 def replace(creature: Creature) -> str:

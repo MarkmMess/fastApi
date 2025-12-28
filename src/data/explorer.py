@@ -51,16 +51,11 @@ def modify(name: str, explorer: Explorer) -> Explorer:
     params = model_to_dict(explorer)
     params["name_orig"] = name
     curs.execute(qry, params)
-    row = curs.fetchone()
-    if row:
-        return row_to_model(row)
+    _ = curs.fetchone()
+    if curs.rowcount == 1:
+        return get_one(explorer.name)
     else:
-        raise Missing(msg=f"Explorer {name} not found")
-
-    #if curs.rowcount == 1:
-        #return get_one(name)
-    # else:
-    #    raise Missing(msg=f"Explorer {name} not found")
+        raise Missing(msg=f"Explorer {explorer.name} not found")
 
 def delete(name: str):
     qry = "delete from explorer where name=:name"

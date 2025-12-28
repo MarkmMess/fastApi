@@ -56,9 +56,8 @@ def modify(name:str, creature: Creature):
     params["name_orig"] = name
     curs.execute(qry, params)
     if curs.rowcount == 0:
-        raise Missing(msg=f"Creature {creature.name} not found")
-    return get_one(name)
-
+        raise Missing(msg=f"Creature {name} not found")
+    return get_one(creature.name)
 
 def delete(name: str):
     qry = "delete from creature where name = :name"
