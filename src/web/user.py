@@ -12,7 +12,7 @@ else:
 
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
-router = APIRouter(prefix = "/user")
+router = APIRouter(prefix = "/user", tags = ["User"])
 
 # --- Новые данные auth
 # Эта зависимость создает сообщение в каталоге

@@ -3,7 +3,7 @@ from model.explorer import Explorer
 from service import explorer as service
 from errors import Duplicate, Missing
 
-router = APIRouter(prefix = "/explorer")
+router = APIRouter(prefix = "/explorer", tags = ["Explorer"])
 
 @router.get("")
 @router.get("/")

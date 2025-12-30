@@ -3,7 +3,7 @@ from errors import Duplicate
 from model.creature import Creature
 import service.creature as service
 
-router = APIRouter(prefix = "/creature")
+router = APIRouter(prefix = "/creature", tags = ["Creature"])
 
 @router.get("")
 @router.get("/")
