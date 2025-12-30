@@ -1,6 +1,6 @@
 from datetime import timedelta, datetime
 import os
-from jose import jwt
+from jose import jwt, JWTError
 from model.user import User
 
 if os.getenv("CRYPTID_UNIT_TEST"):
@@ -29,7 +29,7 @@ def get_jwt_username(token:str) -> str | None:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         if not (username := payload.get("sub")):
             return None
-    except jwt.JWTError:
+    except JWTError:
         return None
     return username
 

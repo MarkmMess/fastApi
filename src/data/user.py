@@ -1,6 +1,5 @@
-from sqlite3 import IntegrityError
 from model.user import User
-from .init import curs
+from .init import (conn, curs, get_db, IntegrityError)
 from errors import Missing, Duplicate
 
 curs.execute("""create table if not exists users (
@@ -41,7 +40,6 @@ def create(user: User, table:str = "users"):
         curs.execute(qry, params)
     except IntegrityError:
         raise Duplicate(msg=f"User {user.name} already exists")
-    return get_one(user.name)
 
 
 def modify(name: str, user: User) -> User:
