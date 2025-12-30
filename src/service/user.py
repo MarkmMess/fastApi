@@ -80,5 +80,5 @@ def create(user: User) -> User:
 def modify(name: str, user: User) -> User:
     return data.modify(name, user)
 
-def delete(name: str) -> None:
+def delete(name: str):
     return data.delete(name)

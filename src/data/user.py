@@ -4,11 +4,11 @@ from errors import Missing, Duplicate
 
 curs.execute("""create table if not exists users (
                 name text primary key,
-                hash text primary key)""")
+                hash text)""")
 
 curs.execute("""create table if not exists xusers (
                 name text primary key,
-                hash text primary key)""")
+                hash text)""")
 
 def row_to_model(row: tuple) -> User:
     name, hash = row
@@ -17,8 +17,8 @@ def row_to_model(row: tuple) -> User:
 def model_to_dict(user: User) -> dict:
     return user.model_dump()
 
-def get_one(name: str) -> User:
-    qry = "select * from users where name=:name"
+def get_one(name: str, table:str = "users") -> User:
+    qry = f"select * from {table} where name=:name"
     params = {"name": name}
     curs.execute(qry, params)
     row = curs.fetchone()
@@ -40,6 +40,7 @@ def create(user: User, table:str = "users"):
         curs.execute(qry, params)
     except IntegrityError:
         raise Duplicate(msg=f"User {user.name} already exists")
+    return get_one(user.name, table)
 
 
 def modify(name: str, user: User) -> User:
@@ -55,12 +56,13 @@ def modify(name: str, user: User) -> User:
     else:
         raise Missing(msg=f"User {name} not found")
 
-def delete(name: str) -> None:
+def delete(name: str):
     user = get_one(name)
     qry = f"delete from users where name=:name"
     params = {"name": name}
     curs.execute(qry, params)
     if curs.rowcount != 1:
-        raise Missing(msg=f"Creature {name} not found")
+        raise Missing(msg=f"User {name} not found")
     create(user, table="xusers")
+    conn.commit()
 

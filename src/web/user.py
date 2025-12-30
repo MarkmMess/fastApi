@@ -78,7 +78,7 @@ def modify(name: str, user: User) -> User:
         raise HTTPException(status_code=404, detail=exc.msg)
 
 @router.delete("/{name}")
-def delete(name: str) -> None:
+def delete(name: str):
     try:
         return service.delete(name)
     except Missing as exc:
