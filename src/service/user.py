@@ -77,6 +77,9 @@ def get_one(name) -> User:
 def create(user: User) -> User:
     return data.create(user)
 
+def unarchive(name:str) -> User:
+    return data.unarchive(name)
+
 def modify(name: str, user: User) -> User:
     return data.modify(name, user)
 

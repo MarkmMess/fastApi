@@ -42,6 +42,14 @@ def create(user: User, table:str = "users"):
         raise Duplicate(msg=f"User {user.name} already exists")
     return get_one(user.name, table)
 
+def unarchive(name:str) -> User:
+    user = get_one(name, table="xusers")
+    qry = f"delete from xusers where name=:name"
+    params = {"name": name}
+    curs.execute(qry, params)
+    create(user)
+    conn.commit()
+    return get_one(user.name)
 
 def modify(name: str, user: User) -> User:
     qry = "update users set name=:name, hash=:hash where name=:name_orig"

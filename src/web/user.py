@@ -70,6 +70,13 @@ def create(user: User) -> User:
     except Duplicate as exc:
         raise HTTPException(status_code=409, detail=exc.msg)
 
+@router.post("/", status_code=201)
+def unarchive(name: str) -> User:
+    try:
+        return service.unarchive(name)
+    except Missing as exc:
+        raise HTTPException(status_code=404, detail=exc.msg)
+
 @router.patch("/")
 def modify(name: str, user: User) -> User:
     try:
