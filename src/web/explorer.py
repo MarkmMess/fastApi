@@ -30,7 +30,7 @@ def create(explorer: Explorer) -> Explorer:
 def modify(name: str, explorer: Explorer) -> Explorer:
     try:
         return service.modify(name, explorer)
-    except Duplicate as exc:
+    except Missing as exc:
         raise HTTPException(status_code=404, detail=exc.msg)
 
 @router.put("/")
