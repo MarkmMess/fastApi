@@ -1,22 +1,26 @@
 from model.explorer import Explorer
-from .init import (curs, IntegrityError)
+from .init import curs, IntegrityError
 from errors import Missing, Duplicate
 
 # Пройти курс по sql
 
 
-curs.execute("""create table if not exists explorer (
+curs.execute(
+    """create table if not exists explorer (
                 name text primary key,
                 country text,
-                description text)""")
+                description text)"""
+)
+
 
 def row_to_model(row: tuple) -> Explorer:
     name, country, description = row
-    return Explorer(name=name,
-                    country=country, description=description)
+    return Explorer(name=name, country=country, description=description)
+
 
 def model_to_dict(explorer: Explorer) -> dict:
     return explorer.model_dump()
+
 
 def get_one(name: str) -> Explorer:
     qry = "select * from explorer where name=:name"
@@ -28,10 +32,12 @@ def get_one(name: str) -> Explorer:
     else:
         raise Missing(msg=f"Explorer {name} not found")
 
+
 def get_all() -> list[Explorer]:
     qry = "select * from explorer"
     curs.execute(qry)
     return [row_to_model(row) for row in curs.fetchall()]
+
 
 def create(explorer: Explorer) -> Explorer:
     qry = """insert into explorer (name, country, description)
@@ -42,6 +48,7 @@ def create(explorer: Explorer) -> Explorer:
     except IntegrityError:
         raise Duplicate(msg=f"Explorer {explorer.name} already exists")
     return get_one(explorer.name)
+
 
 def modify(name: str, explorer: Explorer) -> Explorer:
     qry = """update explorer set name=:name, 
@@ -56,6 +63,7 @@ def modify(name: str, explorer: Explorer) -> Explorer:
         return get_one(explorer.name)
     else:
         raise Missing(msg=f"Explorer {explorer.name} not found")
+
 
 def delete(name: str):
     qry = "delete from explorer where name=:name"

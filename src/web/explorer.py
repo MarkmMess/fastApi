@@ -3,12 +3,14 @@ from model.explorer import Explorer
 from service import explorer as service
 from errors import Duplicate, Missing
 
-router = APIRouter(prefix = "/explorer", tags = ["Explorer"])
+router = APIRouter(prefix="/explorer", tags=["Explorer"])
+
 
 @router.get("")
 @router.get("/")
 def get_all() -> list[Explorer]:
     return service.get_all()
+
 
 @router.get("/{name}")
 def get_one(name) -> Explorer:
@@ -26,12 +28,14 @@ def create(explorer: Explorer) -> Explorer:
     except Duplicate as exc:
         raise HTTPException(status_code=404, detail=exc.msg)
 
+
 @router.patch("/")
 def modify(name: str, explorer: Explorer) -> Explorer:
     try:
         return service.modify(name, explorer)
     except Missing as exc:
         raise HTTPException(status_code=404, detail=exc.msg)
+
 
 @router.put("/")
 def replace(explorer: Explorer) -> Explorer:

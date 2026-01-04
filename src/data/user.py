@@ -1,23 +1,30 @@
 from model.user import User
-from .init import (conn, curs, get_db, IntegrityError)
+from .init import conn, curs, get_db, IntegrityError
 from errors import Missing, Duplicate
 
-curs.execute("""create table if not exists users (
+curs.execute(
+    """create table if not exists users (
                 name text primary key,
-                hash text)""")
+                hash text)"""
+)
 
-curs.execute("""create table if not exists xusers (
+curs.execute(
+    """create table if not exists xusers (
                 name text primary key,
-                hash text)""")
+                hash text)"""
+)
+
 
 def row_to_model(row: tuple) -> User:
     name, hash = row
     return User(name=name, hash=hash)
 
+
 def model_to_dict(user: User) -> dict:
     return user.model_dump()
 
-def get_one(name: str, table:str = "users") -> User:
+
+def get_one(name: str, table: str = "users") -> User:
     qry = f"select * from {table} where name=:name"
     params = {"name": name}
     curs.execute(qry, params)
@@ -27,13 +34,15 @@ def get_one(name: str, table:str = "users") -> User:
     else:
         raise Missing(msg=f"User {name} not found")
 
+
 def get_all() -> list[User]:
     qry = "select * from users"
     curs.execute(qry)
     rows = curs.fetchall()
     return [row_to_model(user) for user in rows]
 
-def create(user: User, table:str = "users"):
+
+def create(user: User, table: str = "users"):
     qry = f"insert into {table} (name, hash) values (:name, :hash)"
     params = model_to_dict(user)
     try:
@@ -42,7 +51,8 @@ def create(user: User, table:str = "users"):
         raise Duplicate(msg=f"User {user.name} already exists")
     return get_one(user.name, table)
 
-def unarchive(name:str) -> User:
+
+def unarchive(name: str) -> User:
     user = get_one(name, table="xusers")
     qry = f"delete from xusers where name=:name"
     params = {"name": name}
@@ -51,18 +61,16 @@ def unarchive(name:str) -> User:
     conn.commit()
     return get_one(user.name)
 
+
 def modify(name: str, user: User) -> User:
     qry = "update users set name=:name, hash=:hash where name=:name_orig"
-    params = {
-        "name": user.name,
-        "hash": user.hash,
-        "name_orig": name
-    }
+    params = {"name": user.name, "hash": user.hash, "name_orig": name}
     curs.execute(qry, params)
     if curs.rowcount == 1:
         return get_one(user.name)
     else:
         raise Missing(msg=f"User {name} not found")
+
 
 def delete(name: str):
     user = get_one(name)
@@ -73,4 +81,3 @@ def delete(name: str):
         raise Missing(msg=f"User {name} not found")
     create(user, table="xusers")
     conn.commit()
-
