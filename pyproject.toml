@@ -14,7 +14,8 @@ dependencies = [
     "uvicorn[standart] (>=0.40.0,<0.41.0)",
     "poetry (>=2.2.1,<3.0.0)",
     "sqlalchemy[asyncio] (>=2.0.45,<3.0.0)",
-    "aiosqlite (>=0.22.1,<0.23.0)"
+    "aiosqlite (>=0.22.1,<0.23.0)",
+    "pydantic-settings (>=2.12.0,<3.0.0)"
 ]
 
 
