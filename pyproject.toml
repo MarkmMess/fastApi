@@ -12,7 +12,8 @@ dependencies = [
     "pytest (>=9.0.2,<10.0.0)",
     "fastapi (>=0.128.0,<0.129.0)",
     "uvicorn[standart] (>=0.40.0,<0.41.0)",
-    "poetry (>=2.2.1,<3.0.0)"
+    "poetry (>=2.2.1,<3.0.0)",
+    "sqlalchemy[asyncio] (>=2.0.45,<3.0.0)"
 ]
 
 
